@@ -17,7 +17,7 @@ class VendingMachine
     private array $availableChange;
 
     /** @var Coin[] */
-    private array $currentlyInsertedMoney;
+    private array $currentlyInsertedCoins;
 
     private function __construct(
         VendingMachineId $id,
@@ -29,7 +29,7 @@ class VendingMachine
         $this->name = $name;
         $this->products = $products;
         $this->availableChange = $coins;
-        $this->currentlyInsertedMoney = [];
+        $this->currentlyInsertedCoins = [];
     }
 
     public static function create(
@@ -61,40 +61,40 @@ class VendingMachine
         $this->products[] = $product;
     }
 
-    public function insertMoney(array $coins)
+    public function insertCoins(array $coins)
     {
         /** @var Coin $coin */
         foreach ($coins as $coin) {
-            $this->currentlyInsertedMoney[] = $coin;
+            $this->currentlyInsertedCoins[] = $coin;
             $this->availableChange[] = $coin;
         }
     }
 
-    public function insertedMoneyValue(): float
+    public function insertedCoinsValue(): float
     {
-        $insertedMoney = 0;
-        if (!empty($this->currentlyInsertedMoney)) {
+        $insertedCoins = 0;
+        if (!empty($this->currentlyInsertedCoins)) {
             /** @var Coin $coin */
-            foreach ($this->currentlyInsertedMoney as $coin) {
-                $insertedMoney += $coin->value()->value();
+            foreach ($this->currentlyInsertedCoins as $coin) {
+                $insertedCoins += $coin->value()->value();
             }
         }
         
-        return $insertedMoney;
+        return $insertedCoins;
     }
 
     // Devuelve el dinero introducido para la compra de un producto
-    public function returnInsertedMoney()
+    public function returnInsertedCoins()
     {
-        /** @var Coin $insertedMoney */
-        foreach ($this->currentlyInsertedMoney as $keyInserted => $insertedMoney) {
+        /** @var Coin $insertedCoins */
+        foreach ($this->currentlyInsertedCoins as $keyInserted => $insertedCoins) {
 
             /** @var Coin $availableChange */
             foreach ($this->availableChange as $keyAvailable => $availableChange) {
 
-                if ($availableChange->equals($insertedMoney)) {
+                if ($availableChange->equals($insertedCoins)) {
                     unset($this->availableChange[$keyAvailable]);
-                    unset($this->currentlyInsertedMoney[$keyInserted]);
+                    unset($this->currentlyInsertedCoins[$keyInserted]);
                 }
             }
         }
@@ -105,14 +105,14 @@ class VendingMachine
         return $this->availableChange;
     }
 
-    public function currentlyInsertedMoney(): array
+    public function currentlyInsertedCoins(): array
     {
-        return $this->currentlyInsertedMoney;
+        return $this->currentlyInsertedCoins;
     }
 
-    public function setCurrentlyInsertedMoney(array $currentlyInsertedMoney): void
+    public function setCurrentlyInsertedCoins(array $currentlyInsertedCoins): void
     {
-        $this->currentlyInsertedMoney = $currentlyInsertedMoney;
+        $this->currentlyInsertedCoins = $currentlyInsertedCoins;
     }
 
     public function availableChangeValue(): float
@@ -125,5 +125,4 @@ class VendingMachine
 
         return $change;
     }
-
 }
